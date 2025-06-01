@@ -14,6 +14,11 @@ import WaitingStudent from './Pages/Admin/WaitingStudent';
 import ApprovedStudents from './Pages/Admin/ApprovedStudents';
 import TeacherLogin from './Pages/Teacher/TeacherLogin';
 import TeacherDashboard from './Pages/Teacher/TeacherDashboard';
+import SearchTeacher from './Pages/Student/SearchTeacher';
+import ScheduleAppointment from './Pages/Teacher/ScheduleAppointment';
+import ManageAppointments from './Pages/Teacher/ManageAppointments';
+import MessageInbox from './Pages/Teacher/MessageInbox';
+import Appointments from './Pages/Teacher/Appointments';
 
 const router = createBrowserRouter([
   {
@@ -46,6 +51,22 @@ const router = createBrowserRouter([
     path: "/teacherDashboard",
     element: <TeacherDashboard />
   },
+  {
+    path: "/scheduleAppointment",
+    element: <ScheduleAppointment />
+  },
+  {
+    path: "/manageAppointments",
+    element: <ManageAppointments />
+  },
+  {
+    path: "/messages",
+    element: <MessageInbox />
+  },
+  {
+    path: "/allAppointments",
+    element: <Appointments />
+  },
   // for students
   {
     path: "/studentRegister",
@@ -54,6 +75,10 @@ const router = createBrowserRouter([
   {
     path: "/studentLogin",
     element: <Login />
+  },
+  {
+    path: "/searchTeacher",
+    element: <SearchTeacher />
   },
 ]);
 

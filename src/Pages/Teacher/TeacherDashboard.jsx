@@ -1,18 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLoginInfo } from '../../Slices/userSlices'; // Adjust path if needed
 import { toast, ToastContainer, Bounce } from 'react-toastify';
 import { CalendarDays, CheckCircle, MessageSquare, ClipboardList, LogOut } from 'lucide-react';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
   const auth = getAuth();
+  const dispatch = useDispatch();
+  const teacher = useSelector((state) => state.userDetails.userInfo);
+
+  // Check auth state and set user info in Redux
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(userLoginInfo({ email: user.email }));
+      } else {
+        navigate('/teacherLogin');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, dispatch, navigate]);
 
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
         toast.success("Logged out successfully");
-        navigate("/teacher-login");
+        dispatch(userLoginInfo(null)); // Clear Redux store
+        navigate("/teacherLogin");
       })
       .catch((error) => {
         console.error(error.message);
@@ -40,12 +59,14 @@ const TeacherDashboard = () => {
         transition={Bounce}
       />
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Teacher Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Teacher Dashboard
+        </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* Schedule Appointment */}
           <div
-            onClick={() => handleNavigate('/teacher/schedule-appointment')}
+            onClick={() => handleNavigate('/scheduleAppointment')}
             className="bg-white shadow hover:shadow-md transition rounded-lg p-6 flex items-center justify-between cursor-pointer"
           >
             <div>
@@ -57,7 +78,7 @@ const TeacherDashboard = () => {
 
           {/* Approve/Cancel Appointment */}
           <div
-            onClick={() => handleNavigate('/teacher/approve-cancel')}
+            onClick={() => handleNavigate('/manageAppointments')}
             className="bg-white shadow hover:shadow-md transition rounded-lg p-6 flex items-center justify-between cursor-pointer"
           >
             <div>
@@ -69,7 +90,7 @@ const TeacherDashboard = () => {
 
           {/* View Messages */}
           <div
-            onClick={() => handleNavigate('/teacher/messages')}
+            onClick={() => handleNavigate('/messages')}
             className="bg-white shadow hover:shadow-md transition rounded-lg p-6 flex items-center justify-between cursor-pointer"
           >
             <div>
@@ -81,7 +102,7 @@ const TeacherDashboard = () => {
 
           {/* View All Appointments */}
           <div
-            onClick={() => handleNavigate('/teacher/all-appointments')}
+            onClick={() => handleNavigate('/allAppointments')}
             className="bg-white shadow hover:shadow-md transition rounded-lg p-6 flex items-center justify-between cursor-pointer"
           >
             <div>
@@ -96,7 +117,7 @@ const TeacherDashboard = () => {
         <div className="mt-8 text-center">
           <button
             onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded flex items-center justify-center mx-auto"
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded flex items-center justify-center mx-auto cursor-pointer"
           >
             <LogOut className="w-5 h-5 mr-2" />
             Logout

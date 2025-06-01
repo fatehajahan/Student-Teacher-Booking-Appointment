@@ -87,12 +87,12 @@ const WaitingStudent = () => {
                                 <button
                                     onClick={() => handleApprove(student.userid)}
                                     disabled={approveStudent === student.userid}
-                                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 cursor-pointer">
                                     {approveStudent === student.userid ? "Approving..." : "Approve"}
                                 </button>
                                 <button
                                     onClick={() => handleReject(student.userid)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 cursor-pointer">
                                     Reject
                                 </button>
                             </div>

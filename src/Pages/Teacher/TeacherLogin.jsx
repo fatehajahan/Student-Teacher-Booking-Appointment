@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { userLoginInfo } from '../../Slices/userSlices';  // Adjust path as needed
 import { toast, ToastContainer, Bounce } from 'react-toastify';
 
 const TeacherLogin = () => {
     const auth = getAuth();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
 
@@ -21,8 +24,18 @@ const TeacherLogin = () => {
 
         signInWithEmailAndPassword(auth, email, sharedPassword)
             .then((userCredential) => {
+                const teacher = {
+                    email: userCredential.user.email,
+                    uid: userCredential.user.uid,
+                };
+
+                // Save to Redux
+                dispatch(userLoginInfo(teacher));
+
+                // Save to localStorage (optional)
+                localStorage.setItem('userLoginInfo', JSON.stringify(teacher));
+
                 toast.success("Login successful!");
-                // navigate to dashboard or home
                 setTimeout(() => {
                     navigate('/teacherDashboard');
                 }, 1500);
@@ -66,7 +79,7 @@ const TeacherLogin = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer"
                     >
                         Login
                     </button>
