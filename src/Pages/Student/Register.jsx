@@ -27,7 +27,7 @@ const Register = () => {
         console.log(userCredential)
         const user = userCredential.user;
         return updateProfile(user, { displayName: name }).then(() => {
-          return set(ref(db, 'students/' + user.uid), {
+          return set(ref(db, 'waitingStudents/' + user.uid), {
             name: name,
             email: email,
           }).then(() => {
@@ -37,13 +37,17 @@ const Register = () => {
             setPassword("");
             setEmail("");
             setTimeout(() => {
-              navigate('/studentApprovalList');
+              navigate('/waitingStudent');
             }, 5000)
           })
         })
       })
       .catch((error) => {
         const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Registration Error:", errorCode, errorMessage);
+        setError(errorMessage); // <-- Important!
+        toast.error(errorMessage); // Optional: notify user
       });
   };
 
@@ -82,7 +86,7 @@ const Register = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your password"
+              placeholder="Enter your email"
             />
           </div>
           <div>

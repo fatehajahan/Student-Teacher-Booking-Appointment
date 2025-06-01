@@ -1,50 +1,56 @@
 import React, { useState } from 'react';
 import { Bounce, toast, ToastContainer } from 'react-toastify';
 import { getDatabase, push, ref, set } from 'firebase/database';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const TeacherForm = () => {
-    const db = getDatabase()
+    const db = getDatabase();
+    const auth = getAuth();
     const [teacherName, setTeacherName] = useState('');
+    const [email, setEmail] = useState('');
     const [department, setDepartment] = useState('');
     const [subject, setSubject] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!teacherName || !department || !subject) {
+        if (!teacherName || !email || !department || !subject) {
             alert('Please fill in all fields.');
             return;
         }
 
-        const newTeacher = {
-            name: teacherName,
-            department,
-            subject,
-        };
+        const sharedPassword = "teacher123"; // 🔑 Shared password for all teachers
 
-        console.log('New Teacher:', newTeacher);
+        try {
+            // 1️⃣ Create user in Firebase Authentication
+            await createUserWithEmailAndPassword(auth, email, sharedPassword);
 
-        if (teacherName, department, subject) {
-            set(push(ref(db, 'teachers/')), {
+            // 2️⃣ Save teacher data to Realtime Database
+            const newTeacherRef = push(ref(db, 'teachers/'));
+            await set(newTeacherRef, {
                 name: teacherName,
-                department: department,
-                subject: subject
-            })
-                .then(() => {
-                    toast.success("Teacher added successfully");
-                })
+                email,
+                department,
+                subject
+            });
+
+            toast.success("Teacher added successfully");
+            // 3️⃣ Reset form
+            setTeacherName('');
+            setEmail('');
+            setDepartment('');
+            setSubject('');
+        } catch (error) {
+            console.error("Error creating teacher:", error.message);
+            toast.error("Failed to add teacher");
         }
-        // Reset form
-        setTeacherName('');
-        setDepartment('');
-        setSubject('');
     };
 
     return (
         <div>
             <ToastContainer
                 position="top-right"
-                autoClose={5000}
+                autoClose={1500}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick={false}
@@ -68,6 +74,18 @@ const TeacherForm = () => {
                         value={teacherName}
                         onChange={(e) => setTeacherName(e.target.value)}
                         placeholder="Enter Name"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        required
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter Email"
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                         required
                     />
