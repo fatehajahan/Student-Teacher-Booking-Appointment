@@ -32,7 +32,7 @@ const StudentLogin = () => {
                     console.log('log in done');
                     toast.success('login successfully done')
                     setTimeout(() => {
-                        navigate('/')
+                        navigate('/searchTeacher')
                     }, 2000);
                 })
                 .catch((error) => {

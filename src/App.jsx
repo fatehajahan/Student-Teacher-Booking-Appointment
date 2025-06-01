@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import firebaseConfig from './authentication/firebase.config'
 import TeacherForm from './Pages/Admin/TeacherForm'
-import AdminMainPage from './Pages/MainPage/MainPage'
+import MainPage from './Pages/MainPage/MainPage'
 import TeacherList from './Pages/Admin/TeacherList';
 // import StudentApproval from './Pages/Admin/StudentApproval';
 import Register from './Pages/Student/Register';
@@ -23,7 +23,7 @@ import Appointments from './Pages/Teacher/Appointments';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AdminMainPage />,
+    element: <MainPage />,
   },
   {
     path: "/teacherForm",
