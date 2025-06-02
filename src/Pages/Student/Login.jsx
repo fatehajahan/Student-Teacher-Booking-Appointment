@@ -29,11 +29,13 @@ const StudentLogin = () => {
                     console.log(user.user);
                     dispatch(userLoginInfo(user.user))
                     localStorage.setItem("userLoginInfo", JSON.stringify(user.user));
-                    console.log('log in done');
-                    toast.success('login successfully done')
-                    setTimeout(() => {
+                    if(user.user.email === "approvedStudents/"){
+                        setTimeout(() => {
                         navigate('/searchTeacher')
                     }, 2000);
+                    }else{
+                        toast.error('You are not an approved Student, Please Wait for Admin Aproval')
+                    }
                 })
                 .catch((error) => {
                     const errorCode = error.code;

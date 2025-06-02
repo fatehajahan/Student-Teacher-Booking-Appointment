@@ -37,7 +37,7 @@ const Register = () => {
             setPassword("");
             setEmail("");
             setTimeout(() => {
-              navigate('/waitingStudent');
+              navigate('/studentLogin');
             }, 5000)
           })
         })
