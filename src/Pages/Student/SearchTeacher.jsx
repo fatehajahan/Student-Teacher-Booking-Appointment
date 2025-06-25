@@ -113,13 +113,13 @@ const SearchTeacher = () => {
                 <div className="mb-6">
                     <input
                         type="text"
-                        placeholder="Search by name..."
-                        value={searchTerm}
+                        placeholder="Search by name, department, or subject"
+                        value={searchTerm}    
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                </div>
-
+                </div>   
+   
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {filteredTeachers.map((teacher) => (
                         <div key={teacher.id} className="bg-white shadow rounded-lg p-6">
@@ -137,7 +137,7 @@ const SearchTeacher = () => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
-
+   
                             <div className="flex justify-between">
                                 <button
                                     onClick={() => handleBookAppointment(teacher)}
