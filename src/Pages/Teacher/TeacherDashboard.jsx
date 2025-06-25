@@ -31,7 +31,7 @@ const TeacherDashboard = () => {
       .then(() => {
         toast.success("Logged out successfully");
         dispatch(userLoginInfo(null)); // Clear Redux store
-        navigate("/teacherLogin");
+        navigate("/");
       })
       .catch((error) => {
         console.error(error.message);

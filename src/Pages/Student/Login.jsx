@@ -4,16 +4,18 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { userLoginInfo } from '../../Slices/userSlices';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, onValue } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
 
 const StudentLogin = () => {
     const auth = getAuth();
-    const navigate = useNavigate()
+    const db = getDatabase();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const dispatch = useDispatch()
-
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -23,29 +25,47 @@ const StudentLogin = () => {
             return;
         }
 
-        if (email && password) {
-            signInWithEmailAndPassword(auth, email, password)
-                .then((user) => {
-                    console.log(user.user);
-                    dispatch(userLoginInfo(user.user))
-                    localStorage.setItem("userLoginInfo", JSON.stringify(user.user));
-                    if(user.user.email === "approvedStudents/"){
-                        setTimeout(() => {
-                        navigate('/searchTeacher')
-                    }, 2000);
-                    }else{
-                        toast.error('You are not an approved Student, Please Wait for Admin Aproval')
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                const approvedRef = ref(db, 'approvedStudents');
+
+                onValue(
+                    approvedRef,
+                    (snapshot) => {
+                        let approved = false;
+                        snapshot.forEach((childSnapshot) => {
+                            const data = childSnapshot.val();
+                            if (data.email === user.email) {
+                                approved = true;
+                            }
+                        });
+
+                        if (approved) {
+                            dispatch(userLoginInfo(user));
+                            localStorage.setItem("userLoginInfo", JSON.stringify(user));
+                            toast.success("Login Successful!");
+                            setTimeout(() => {
+                                navigate('/searchTeacher');
+                            }, 2000);
+                        } else {
+                            toast.error('You are not an approved Student, Please wait for Admin Approval');
+                        }
+                    },
+                    {
+                        onlyOnce: true,
                     }
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode);
-                    if (errorCode.includes("auth/invalid-credential")) {
-                        setError('Please give your Registered email id and Password...!!')
-                    }
-                });
-        }
+                );
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                if (errorCode.includes("auth/invalid-credential")) {
+                    setError('Please give your Registered email ID and Password...!!');
+                } else {
+                    setError('Something went wrong. Please try again.');
+                }
+            });
+
         setError('');
     };
 
