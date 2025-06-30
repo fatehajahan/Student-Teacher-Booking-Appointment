@@ -73,7 +73,7 @@ const StudentLogin = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <ToastContainer
                 position="top-center"
-                autoClose={5000}
+                autoClose={1500}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick

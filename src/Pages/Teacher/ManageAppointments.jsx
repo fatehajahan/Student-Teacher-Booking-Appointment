@@ -42,7 +42,19 @@ const ManageAppointments = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 p-6">
-            <ToastContainer position="top-center" autoClose={2000} transition={Bounce} />
+            <ToastContainer
+                position="top-center"
+                autoClose={1500}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
             <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl font-semibold mb-6 text-center">Manage Appointments</h2>
 

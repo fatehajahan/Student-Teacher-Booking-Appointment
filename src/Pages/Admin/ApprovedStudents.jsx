@@ -35,7 +35,7 @@ const ApprovedStudents = () => {
         <div className="max-w-2xl mx-auto mt-12">
             <ToastContainer
                 position="top-center"
-                autoClose={2000}
+                autoClose={1500}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick

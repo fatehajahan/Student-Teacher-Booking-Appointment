@@ -40,7 +40,19 @@ const ScheduleAppointment = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 p-6">
-            <ToastContainer position="top-center" autoClose={2000} transition={Bounce} />
+            <ToastContainer
+                position="top-center"
+                autoClose={1500}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
             <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6">
                 <h2 className="text-2xl font-semibold mb-4 text-center">Schedule Appointment</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
